@@ -1,0 +1,457 @@
+---
+title: "TESTE TÉCNICO"
+output: html_notebook
+---
+
+```{r}
+library(plotly)
+packageVersion('plotly')
+
+```
+
+ 
+Load the df and explore
+```{r}
+
+df <- read.csv(file.choose(), header = TRUE)
+ 
+head(df)
+str(df)
+summary(df)
+
+```
+
+Explorar as notas finais 
+```{r}
+
+m1 = mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN))])
+m2 = mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH))])
+m3 = mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC))])
+m4 = mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT))])
+m5 = mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO))])
+
+bar <- plot_ly(
+  x = c("média CN", "média CH", "média LC", 'média MT', 'média Redação'),
+  y = c(m1, m2, m3, m4, m5),
+  name = "médias de notas",
+  type = 'bar' 
+) %>% layout(title = "Média geral das notas por Categoria")
+
+bar
+
+
+
+```
+
+
+Explorar as dispersões
+```{r}
+y1 = df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN))]
+y2 = df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH))]
+y3 = df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC))]
+y4 = df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT))]
+y5 = df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO))]
+
+
+p <- plot_ly( type = 'box') %>%
+  add_boxplot(y = y1, name = "CIENCIAS NATURAIS") %>%
+  add_boxplot(y = y2, name = "CIENCIAS HUMANAS") %>%
+  add_boxplot(y = y3, name = "LINGUAGEM E CODIGOS") %>%
+  add_boxplot(y = y4, name = "MATEMATICA") %>%
+  add_boxplot(y = y5, name = "REDACAO") %>%
+  layout(title = "Distribuição das Notas por Categoria")
+p
+
+```
+A distribuição ads notas se aproximam, em todos os casos, de distribuições normais, não fugindo do esperado e não apontando nenhuma grande distorção no que se refere à cada 'matéria' do enem.
+
+
+Segmentar Por regiao geografica - criar vetores com as medias de cada nota por estado
+```{r}
+
+medias_AC <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="AC")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="AC")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="AC")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="AC")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="AC")])
+               )
+
+medias_AL <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="AL")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="AL")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="AL")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="AL")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="AL")])
+               )
+
+
+medias_AP <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="AP")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="AP")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="AP")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="AP")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="AP")])
+               )
+
+medias_AM <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="AM")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="AM")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="AM")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="AM")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="AM")])
+               )
+
+medias_BA <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="BA")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="BA")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="BA")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="BA")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="BA")])
+               )
+
+
+medias_CE <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="CE")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="CE")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="CE")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="CE")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="CE")])
+               )
+
+
+medias_DF <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="DF")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="DF")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="DF")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="DF")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="DF")])
+               )
+
+
+medias_ES <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="ES")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="ES")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="ES")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="ES")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="ES")])
+               )
+
+
+medias_GO <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="GO")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="GO")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="GO")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="GO")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="GO")])
+               )
+
+
+medias_MA <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="MA")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="MA")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="MA")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="MA")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="MA")])
+               )
+
+
+medias_MS <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="MS")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="MS")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="MS")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="MS")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="MS")])
+               )
+               
+
+medias_MT <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="MT")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="MT")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="MT")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="MT")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="MT")])
+               )
+               
+
+medias_MG <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="MG")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="MG")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="MG")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="MG")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="MG")])
+               )
+               
+
+medias_PA <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="PA")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="PA")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="PA")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="PA")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="PA")])
+               )
+               
+
+medias_PB <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="PB")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="PB")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="PB")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="PB")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="PB")])
+               )
+               
+
+medias_PR <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="PR")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="PR")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="PR")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="PR")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="PR")])
+               )
+               
+
+medias_PE <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="PE")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="PE")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="PE")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="PE")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="PE")])
+               )
+
+
+medias_PI <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="PI")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="PI")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="PI")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="PI")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="PI")])
+               )
+
+medias_RJ <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="RJ")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="RJ")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="RJ")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="RJ")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="RJ")])
+               )
+
+medias_RN <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="RN")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="RN")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="RN")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="RN")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="RN")])
+               )
+
+
+medias_RS <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="RS")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="RS")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="RS")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="RS")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="RS")])
+               )
+
+medias_RO <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="RO")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="RO")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="RO")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="RO")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="RO")])
+               )
+
+medias_RR <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="RR")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="RR")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="RR")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="RR")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="RR")])
+               )
+
+medias_SC <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="SC")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="SC")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="SC")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="SC")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="SC")])
+               )
+
+medias_SP <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="SP")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="SP")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="SP")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="SP")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="SP")])
+               )
+
+medias_SE <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="SE")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="SE")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="SE")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="SE")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="SE")])
+               )
+
+
+medias_TO <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="TO")]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="TO")]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="TO")]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="TO")]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="TO")])
+               )
+
+
+ 
+
+
+
+```
+
+```{r}
+
+x <- c("NU_NOTA_CN", "NU_NOTA_CH", "NU_NOTA_LC","NU_NOTA_MT", "NU_NOTA_REDACAO" )
+data <- data.frame(x, medias_AC, medias_AL, medias_AP, medias_AM, medias_BA, medias_CE, medias_DF, medias_ES, medias_GO, medias_MA, medias_MT, medias_MS, medias_MG, medias_PA, medias_PB, medias_PR, medias_PE, medias_PI, medias_RJ, medias_RN, medias_RS, medias_RO, medias_RR, medias_RS, medias_SC, medias_SP, medias_SE, medias_TO)
+
+
+geobar <- plot_ly(data, x = ~x, y = ~medias_AC, type = 'bar', name = 'AC', marker = list(color = 'rgb(204,204,204)')) %>%
+     add_trace(y = ~medias_AL, name = 'AL', marker = list(color = 'rgb(204,204,190)')) %>%
+     add_trace(y = ~medias_AP, name = 'AP', marker = list(color = 'rgb(204,204,170)')) %>%
+     add_trace(y = ~medias_AM, name = 'AM', marker = list(color = 'rgb(204,204,150)')) %>%
+     add_trace(y = ~medias_BA, name = 'BA', marker = list(color = 'rgb(204,204,130)')) %>%
+     add_trace(y = ~medias_CE, name = 'CE', marker = list(color = 'rgb(204,204,110)')) %>%
+     add_trace(y = ~medias_DF, name = 'DF', marker = list(color = 'rgb(204,204,90)')) %>%
+     add_trace(y = ~medias_ES, name = 'ES', marker = list(color = 'rgb(204,204,70)')) %>%
+     add_trace(y = ~medias_GO, name = 'GO', marker = list(color = 'rgb(204,204,50)')) %>%
+     add_trace(y = ~medias_MA, name = 'MA', marker = list(color = 'rgb(204,204,30)')) %>%
+     add_trace(y = ~medias_MT, name = 'MT', marker = list(color = 'rgb(204,204,10)')) %>%
+     add_trace(y = ~medias_MG, name = 'MF', marker = list(color = 'rgb(204,204,0)')) %>%
+     add_trace(y = ~medias_PA, name = 'PA', marker = list(color = 'rgb(204,190,0)')) %>%
+     add_trace(y = ~medias_PB, name = 'PB', marker = list(color = 'rgb(204,170,0)')) %>%
+     add_trace(y = ~medias_PR, name = 'PR', marker = list(color = 'rgb(204,150,0)')) %>%
+     add_trace(y = ~medias_PE, name = 'PE', marker = list(color = 'rgb(204,130,0)')) %>%
+     add_trace(y = ~medias_PI, name = 'PI', marker = list(color = 'rgb(204,110,0)')) %>%
+     add_trace(y = ~medias_RJ, name = 'RJ', marker = list(color = 'rgb(204,90,0)')) %>%
+     add_trace(y = ~medias_RN, name = 'RN', marker = list(color = 'rgb(204,70,0)')) %>%
+     add_trace(y = ~medias_RS, name = 'RS', marker = list(color = 'rgb(204,50,0)')) %>%
+     add_trace(y = ~medias_RO, name = 'RO', marker = list(color = 'rgb(204,30,0)')) %>%
+     add_trace(y = ~medias_RR, name = 'RR', marker = list(color = 'rgb(204,10,0)')) %>%
+     add_trace(y = ~medias_RS, name = 'RS', marker = list(color = 'rgb(190,0,0)')) %>%
+     add_trace(y = ~medias_SC, name = 'SC', marker = list(color = 'rgb(170,0,0)')) %>%
+     add_trace(y = ~medias_SP, name = 'SP', marker = list(color = 'rgb(150,0,0)')) %>%
+     add_trace(y = ~medias_SE, name = 'SE', marker = list(color = 'rgb(130,0,0)')) %>%
+     add_trace(y = ~medias_TO, name = 'TO', marker = list(color = 'rgb(110,0,0)')) %>%
+     layout(xaxis = list(title = "", tickangle = -45),
+         yaxis = list(title = ""),
+         margin = list(b = 100),
+         barmode = 'group')
+geobar
+
+
+
+
+```
+
+Pela analise anterior, é possível observar que, em praticamente todos os quesitos, Roraima apresenta um desempenho muito abaixo dos demais estados. 
+Outros estados que apresentam dados inferiores à maioria são Amapá e Alagoas. 
+É possível que segmentar os alunos por estado forneça uma boa representação do cenário para a proposição de políticas públicas 
+
+
+Analise por segmento das escolas, criacao de vetores com as medias
+```{r}
+
+medias_FED <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$TP_DEPENDENCIA_ADM_ESC==1)])
+               )
+
+medias_EST <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$TP_DEPENDENCIA_ADM_ESC==2)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$TP_DEPENDENCIA_ADM_ESC==2)]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$TP_DEPENDENCIA_ADM_ESC==2)]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$TP_DEPENDENCIA_ADM_ESC==2)]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$TP_DEPENDENCIA_ADM_ESC==2)])
+               )
+
+medias_MUN <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$TP_DEPENDENCIA_ADM_ESC==1)])
+               )
+
+medias_PRIV <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$TP_DEPENDENCIA_ADM_ESC==1)]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$TP_DEPENDENCIA_ADM_ESC==1)])
+               )
+
+medias_NA <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & is.na(df$TP_DEPENDENCIA_ADM_ESC))]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & is.na(df$TP_DEPENDENCIA_ADM_ESC))]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & is.na(df$TP_DEPENDENCIA_ADM_ESC))]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & is.na(df$TP_DEPENDENCIA_ADM_ESC))]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & is.na(df$TP_DEPENDENCIA_ADM_ESC))])
+               )
+
+```
+
+
+Segmentar Por tipo de ensino
+```{r}
+
+x2 <- c("NU_NOTA_CN", "NU_NOTA_CH", "NU_NOTA_LC","NU_NOTA_MT", "NU_NOTA_REDACAO" )
+data2 <- data.frame(x2, medias_FED, medias_EST, medias_MUN, medias_PRIV, medias_NA)
+
+
+escbar <- plot_ly(data2, x = ~x2, y = ~medias_FED, type = 'bar', name = 'FEDERAL', marker = list(color = 'rgb(204,204,204)')) %>%
+     add_trace(y = ~medias_EST, name = 'ESTADUAL', marker = list(color = 'rgb(204,204,190)')) %>%
+     add_trace(y = ~medias_MUN, name = 'MUNICIPAL', marker = list(color = 'rgb(204,204,170)')) %>%
+     add_trace(y = ~medias_PRIV, name = 'PRIVADA', marker = list(color = 'rgb(204,204,150)')) %>%
+     add_trace(y = ~medias_NA, name = 'NAO INFORMADO', marker = list(color = 'rgb(204,204,130)')) %>%
+     layout(xaxis = list(title = "", tickangle = -45),
+         yaxis = list(title = ""),
+         margin = list(b = 100),
+         barmode = 'group')
+escbar
+
+
+```
+Pela analise anterior, é possível observar que, em praticamente todos os quesitos, as escolas estaduais apresentam um rendimento muito inferior
+
+
+
+Segmentar Por tipo de ensino e regiao geografica
+```{r}
+
+medias_EST_RR <- c(
+               mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC=="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC=="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]) ,
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC=="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]) ,
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC=="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]) ,
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC=="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)])
+               )
+
+medias_demais_RR <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$TP_DEPENDENCIA_ADM_ESC!=2)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$TP_DEPENDENCIA_ADM_ESC!=2)]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$TP_DEPENDENCIA_ADM_ESC!=2)]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$TP_DEPENDENCIA_ADM_ESC!=2)]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$TP_DEPENDENCIA_ADM_ESC!=2)])
+               )
+
+
+medias_demais_EST <- c(
+               mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN) & df$SG_UF_ESC!="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH) & df$SG_UF_ESC!="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]) ,
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC) & df$SG_UF_ESC!="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]) ,
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT) & df$SG_UF_ESC!="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)]) ,
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO) & df$SG_UF_ESC!="RR" & df$TP_DEPENDENCIA_ADM_ESC==2)])
+               )
+
+
+medias_GERAIS <- c(mean(df$NU_NOTA_CN[which(!is.na(df$NU_NOTA_CN))]),
+               mean(df$NU_NOTA_CH[which(!is.na(df$NU_NOTA_CH))]),
+               mean(df$NU_NOTA_LC[which(!is.na(df$NU_NOTA_LC))]),
+               mean(df$NU_NOTA_MT[which(!is.na(df$NU_NOTA_MT))]),
+               mean(df$NU_NOTA_REDACAO[which(!is.na(df$NU_NOTA_REDACAO))])
+               )
+
+
+x3 <- c("NU_NOTA_CN", "NU_NOTA_CH", "NU_NOTA_LC","NU_NOTA_MT", "NU_NOTA_REDACAO" )
+data3 <- data.frame(x3, medias_EST_RR, medias_demais_RR, medias_demais_RR, medias_GERAIS)
+
+
+RRbar <- plot_ly(data3, x = ~x3, y = ~medias_EST_RR, type = 'bar', name = 'ESTADUAIS DE RORAIMA', marker = list(color = 'rgb(204,204,204)')) %>% 
+add_trace(y = ~medias_demais_RR, name = 'DEMAIS ESCOLAS DE RR', marker = list(color = 'rgb(204,204,190)')) %>%
+  add_trace(y = ~medias_demais_EST, name = 'DEMAIS ESTADUAIS', marker = list(color = 'rgb(204,204,170)')) %>% 
+  add_trace(y = ~medias_GERAIS, name = 'GERAL', marker = list(color = 'rgb(204,204,150)')) %>% 
+  layout(xaxis = list(title = "", tickangle = -45), yaxis = list(title = ""), margin = list(b = 100), barmode = 'group')
+
+RRbar
+
+
+```
+Como estudos apontam um desempenho inferior da escolas estaduais e das escolas de Roraima, uma analise mais aprofundada das escolas estaduais de roraima e comparação com as demais estaduais do país, as demais escolas de roraima e a média geral nacional corroborou ambos indicios, apontando para um desempenho inferior das escolas estaduais de Roraima em todos os cenarios.
+
+
+Dessa forma, uma politica de incentivo por parte do governo estadual de RR, com investimentos na estrutura física, aumento de salário dos professores e parecerias com o governo federal se mostram prudentes para um primeiro estágio rumo a melhorias educaionais que levem a melhores indícies registrados pelo enem
+
+Tendo essa análise em vista, segmentar os alunos por dependência administrativa e unidade de federação são sugestões para políticas públicas.
+
+
+
+
